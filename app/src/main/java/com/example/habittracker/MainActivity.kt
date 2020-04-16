@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity(), FabClickListener, HabitSaveClickListen
         val transaction = supportFragmentManager.beginTransaction()
         transaction
             .replace(R.id.content_navigation_fragment, HabitAdditionFragment())
+            .addToBackStack(null)
             .commit()
     }
 
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity(), FabClickListener, HabitSaveClickListen
     override fun onHabitClick(habit: Habit, index: Int) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_navigation_fragment, HabitAdditionFragment.newInstance(habit))
+            .addToBackStack(null)
             .commit()
     }
 }

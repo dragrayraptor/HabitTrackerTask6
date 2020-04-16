@@ -1,10 +1,12 @@
 package com.example.habittracker
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -13,16 +15,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_pager.*
 
+const val ADAPTER_POS = "ADAPTER_POS"
 
 class HabitsPagerAdapter(
     fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager) {
-    val goodHabits: ListFragment = ListFragment.newInstance("good_habits")
-    val badHabits: ListFragment = ListFragment.newInstance("bad_habits")
+    var goodHabits = ListFragment.newInstance("good_habits")
+    var badHabits = ListFragment.newInstance("bad_habits")
 
-    override fun getItem(position: Int): Fragment = when (position) {
-        0 -> goodHabits
-        else -> badHabits
+    override fun getItem(position: Int): Fragment {
+        return when (position) {
+            0 -> {
+                goodHabits
+            }
+            else -> {
+                badHabits
+            }
+        }
     }
 
     override fun getCount(): Int = 2
@@ -78,4 +87,29 @@ class ViewPagerFragment: Fragment() {
         }
     }
 
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putInt(ADAPTER_POS, adapter.position)
+//    }
+//
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        super.onViewStateRestored(savedInstanceState)
+//        val position = savedInstanceState?.getInt(ADAPTER_POS, 0) ?: 0
+//        adapter.
+//    }
+
+    override fun onResume() {
+        super.onResume()
+        if (context != null && view != null)
+            hideKeyboardFrom(context!!, view!!)
+    }
+
+    fun hideKeyboardFrom(
+        context: Context,
+        view: View
+    ) {
+        val imm: InputMethodManager =
+            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }

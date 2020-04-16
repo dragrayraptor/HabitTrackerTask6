@@ -35,7 +35,7 @@ class ListFragment: Fragment(), ClickListener {
         fun newInstance(name: String) : ListFragment {
             val fragment = ListFragment()
             val bundle = Bundle()
-            bundle.putString(name, ARGS_NAME)
+            bundle.putString(ARGS_NAME, name)
             fragment.arguments = bundle
             return fragment
         }

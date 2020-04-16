@@ -2,6 +2,10 @@ package com.example.habittracker
 
 import android.content.Context
 import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object HabitsStorageModel {
     private lateinit var db: AppDatabase
@@ -18,7 +22,9 @@ object HabitsStorageModel {
     }
 
     fun addHabit(habit: Habit) {
-        db.habitDao().insert(habit)
+        GlobalScope.launch(Dispatchers.Main) {
+            db.habitDao().insert(habit)
+        }
     }
 
     fun changeHabit(oldHabit: Habit, newHabit: Habit) {
@@ -27,11 +33,13 @@ object HabitsStorageModel {
     }
 
     fun deleteHabit(habit: Habit) {
-        db.habitDao().delete(habit)
+        GlobalScope.launch(Dispatchers.Main) {
+            db.habitDao().delete(habit)
+        }
     }
 
     fun getHabitsByType(type: HabitType): List<Habit> {
-        val habits = db.habitDao().getAll()
+        val habits = getHabits()
         return when(type) {
             HabitType.Good -> habits.filter { it.type == HabitType.Good }
             HabitType.Bad -> habits.filter { it.type == HabitType.Bad }
