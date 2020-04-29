@@ -70,7 +70,7 @@ class HabitAdditionFragment : Fragment() {
         adapter = ArrayAdapter(
             activity!!.applicationContext,
             android.R.layout.simple_spinner_item,
-            Priorities
+            Priority.values().map { it.title }
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             habitPriority.adapter = adapter
@@ -98,7 +98,7 @@ class HabitAdditionFragment : Fragment() {
                 return@setOnClickListener
             val habit = createHabit()
             viewModel.addHabit(habit)
-            habitSaveClickListener.onHabitSave(habit)
+            habitSaveClickListener.onHabitSave()
         }
 
         viewModel.habit.observe(viewLifecycleOwner, Observer { habit ->
@@ -120,8 +120,7 @@ class HabitAdditionFragment : Fragment() {
     private fun fillHabit(habit: Habit) {
         habitTitle.setText(habit.title)
         habitDescription.setText(habit.description)
-        habitPriority.setSelection(
-            Priorities.indexOf(priorityToText[habit.priority]))
+        habitPriority.setSelection(habit.priority.ordinal)
         when (habit.type) {
             HabitType.Good -> goodHabit.isChecked = true
             HabitType.Bad -> badHabit.isChecked = true
@@ -130,16 +129,15 @@ class HabitAdditionFragment : Fragment() {
         periodicity.setText(habit.periodicity.toString())
     }
 
-    private fun createHabit(): Habit {
+    private fun createHabit(): HabitWithoutId {
         val title = habitTitle.text.toString()
         var description = habitDescription.text.toString()
         if (description == "")
             description = getString(R.string.NoDescriptionText)
-        val priorityText = habitPriority.getItemAtPosition(habitPriority.selectedItemPosition).toString()
-        val priority = when (priorityText) {
-            Priorities[0] -> Priority.Low
-            Priorities[1] -> Priority.Medium
-            Priorities[2] -> Priority.High
+        val priority = when (habitPriority.selectedItemPosition) {
+            Priority.Low.ordinal -> Priority.Low
+            Priority.Medium.ordinal -> Priority.Medium
+            Priority.High.ordinal -> Priority.High
             else -> throw Exception("Unknown priority text")
         }
         val habitType = when {
@@ -149,6 +147,6 @@ class HabitAdditionFragment : Fragment() {
         }
         val repetitionsCount = repetitionsCount.text.toString().toInt()
         val periodicity = periodicity.text.toString().toInt()
-        return Habit(title, description, priority, habitType, repetitionsCount, periodicity)
+        return HabitWithoutId(title, description, priority, habitType, repetitionsCount, periodicity)
     }
 }

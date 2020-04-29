@@ -16,9 +16,19 @@ class ViewPagerViewModel(private val model: HabitsStorageModel) : ViewModel() {
     }
 
     private fun load() {
-        mutableGoodHabits.postValue(
-            model.getHabitsByType(HabitType.Good))
-        mutableBadHabits.postValue(
-            model.getHabitsByType(HabitType.Bad))
+        val habitsData = model.getHabits()
+        habitsData.observeForever {
+            mutableGoodHabits.postValue(
+                getHabitsByType(it, HabitType.Good))
+            mutableBadHabits.postValue(
+                getHabitsByType(it, HabitType.Bad))
+        }
+    }
+
+    fun getHabitsByType(habits: List<Habit>, type: HabitType): List<Habit> {
+        return when(type) {
+            HabitType.Good -> habits.filter { it.type == HabitType.Good }
+            HabitType.Bad -> habits.filter { it.type == HabitType.Bad }
+        }
     }
 }

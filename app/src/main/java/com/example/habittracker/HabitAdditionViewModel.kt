@@ -17,7 +17,7 @@ class HabitAdditionViewModel(private val model: HabitsStorageModel, private val 
         mutableHabit.postValue(currentHabit)
     }
 
-    fun addHabit(habit: Habit) {
+    fun addHabit(habit: HabitWithoutId) {
         if (currentHabit == null) {
             model.addHabit(habit)
         } else {

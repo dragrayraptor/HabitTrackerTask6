@@ -99,7 +99,7 @@ class ListFragment: Fragment(), ClickListener {
             fun bind(habit: Habit) {
                 habitTitle.text = habit.title
                 habitDescription.text = habit.description
-                habitPriority.text = "${priorityToText[habit.priority]} приоритет"
+                habitPriority.text = "${habit.priority.title} приоритет"
                 habitType.text = when (habit.type) {
                     HabitType.Bad -> "Вредная привычка"
                     HabitType.Good -> "Хорошая привычка"

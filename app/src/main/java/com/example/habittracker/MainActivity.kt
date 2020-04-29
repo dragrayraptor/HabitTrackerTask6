@@ -22,7 +22,7 @@ interface FabClickListener {
 }
 
 interface HabitSaveClickListener {
-    fun onHabitSave(habit: Habit)
+    fun onHabitSave()
 }
 
 interface HabitClickListener {
@@ -30,15 +30,6 @@ interface HabitClickListener {
 }
 
 class MainActivity : AppCompatActivity(), FabClickListener, HabitSaveClickListener, HabitClickListener {
-    private lateinit var appBarConfiguration: AppBarConfiguration
-
-    private var viewPagerFragment = ViewPagerFragment()
-    private val infoFragment = InfoFragment()
-    private var habitAdditionFragment: HabitAdditionFragment? = null
-
-    private var lastClickedHabit: Habit? = null
-    private var lastClickedHabitIndex: Int = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
@@ -87,7 +78,7 @@ class MainActivity : AppCompatActivity(), FabClickListener, HabitSaveClickListen
             .commit()
     }
 
-    override fun onHabitSave(habit: Habit) {
+    override fun onHabitSave() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_navigation_fragment, ViewPagerFragment())
             .commit()
